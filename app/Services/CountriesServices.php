@@ -3,22 +3,24 @@
 namespace App\Services;
 
 use App\Adapter\RestCountriesAdapter;
+use App\Interfaces\CountriesDataInterface;
+use App\Resources\CountryResource;
 
 final class CountriesServices
 {
-    public function __construct(private readonly RestCountriesAdapter $countriesAdapter)
+    public function __construct(private readonly CountriesDataInterface $countriesData)
     {
     }
 
-    public function fetchCountries(): void
+    public function fetchJsonCountries(): string
     {
-        $countriesData = $this->countriesAdapter->getCountriesData();
-
-        foreach ($countriesData as $index => $countryDto) {
-            $countryArray = [];
-            $countryArray['name'] = $countryDto->name;
-            $countryArray['flag'] = $countryDto->flag;
+        $cachedJson = cache('countries_cache');
+        if(empty($cachedJson)) {
+            $countries = $this->countriesData->getCountriesData();
+            $cachedJson = CountryResource::collection($countries)->toResponse(request())->getContent();
+            cache()->put('countries_cache', $cachedJson, 60);
         }
+        return $cachedJson;
     }
 }
 

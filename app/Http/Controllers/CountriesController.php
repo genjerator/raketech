@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Interfaces\CountriesDataInterface;
-use App\Resources\CountryResource;
-use Illuminate\Http\Request;
+use App\Services\CountriesServices;
+use Illuminate\Support\Facades\Response;
 
 class CountriesController extends Controller
 {
-    public function index(CountriesDataInterface $countriesData)
+    public function index(CountriesServices $countriesServices): \Illuminate\Http\Response
     {
-        $countries = $countriesData->getCountriesData();
-        return CountryResource::collection($countries);
+        return Response::make($countriesServices->fetchJsonCountries())->header('Content-Type', 'application/json');
     }
 }
