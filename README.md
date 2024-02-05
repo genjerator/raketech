@@ -17,7 +17,7 @@ The sail script provides a CLI with convenient methods for interacting with the 
 git clone git@github.com:genjerator/raketech.git
 cd raketech
 ````
-It is importan to run following command in order to get vendor files:
+It is important to run following command in order to get vendor files:
 ````
 docker run --rm \
 -u "$(id -u):$(id -g)" \
